@@ -26,14 +26,13 @@ app.put('/envelopes/envelope/:id', (req, res, next) => {
     const id = Number(req.params.id);
     const edits = req.body;
     const envelope = envelopes.envelopesData.data.find(obj => obj.id === id);
-    if (edits.category !== envelope.category) envelope.category = edits.category;
-    if (envelope.subcategories) {
-        for (const object in envelope.subcategories) {
-            console.log(envelope.subcategories[object]);    
-            //trying to compare values of envelopes before updating them.
-        }
-    } 
-    res.send(envelope)
+    if (!envelope) {
+        res.status(400).send('Nothing to edit, envelope does not exist');
+    } else {
+    const index = envelopes.envelopesData.data.indexOf(envelope);
+    const saved = envelopes.envelopesData.data.splice(index, 1, edits);
+    res.send(`Your edit was successful`);
+    }
 });
 
 app.delete('/envelopes/envelope/:id', (req, res, next) => {
